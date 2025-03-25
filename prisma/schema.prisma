@@ -26,3 +26,13 @@ model User {
     
 }
 
+
+model Project{UserSession {
+        id String @id @default(cuid())
+         createdAt    DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+        githubUrl String
+        deletedAt  DateTime?
+    }
+}
+
