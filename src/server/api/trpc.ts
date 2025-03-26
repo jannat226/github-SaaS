@@ -84,6 +84,18 @@ export const createTRPCRouter = t.router;
  * You can remove this if you don't like it, but it can help catch unwanted waterfalls by simulating
  * network latency that would occur in production but not in local development.
  */
+const isAuthanticated = t.middleware(async ({ next,ctx }) => {
+  const user = await auth();
+  if (!user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" , message: "You must be logged in to access this resource"});
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      user: user,
+    },
+  });
+})
 const timingMiddleware = t.middleware(async ({ next, path }) => {
   const start = Date.now();
 
@@ -118,16 +130,19 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session || !ctx.session.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
-    }
-    return next({
-      ctx: {
-        // infers the `session` as non-nullable
-        session: { ...ctx.session, user: ctx.session.user },
-      },
-    });
-  });
+// export const protectedProcedure = t.procedure
+//   .use(timingMiddleware)
+//   .use(({ ctx, next }) => {
+//     if (!ctx.session || !ctx.session.user) {
+//       throw new TRPCError({ code: "UNAUTHORIZED" });
+//     }
+//     return next({
+//       ctx: {
+//         // infers the `session` as non-nullable
+//         session: { ...ctx.session, user: ctx.session.user },
+//       },
+//     });
+//   });
+export const protectedProcedure = t.procedure.use(isAuthanticated);
+
+// export  protectedProcedure= t.procedure.use(isAuthanticated)
