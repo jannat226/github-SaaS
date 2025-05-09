@@ -87,12 +87,12 @@ export const createTRPCRouter = t.router;
 const isAuthanticated = t.middleware(async ({ next,ctx }) => {
   const user = await auth();
   if (!user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" , message: "You must be logged in to access this resource"});
+    throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next({
     ctx: {
       ...ctx,
-      user: user,
+      session: { user },
     },
   });
 })
@@ -130,19 +130,17 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
  *
  * @see https://trpc.io/docs/procedures
  */
-// export const protectedProcedure = t.procedure
-//   .use(timingMiddleware)
-//   .use(({ ctx, next }) => {
-//     if (!ctx.session || !ctx.session.user) {
-//       throw new TRPCError({ code: "UNAUTHORIZED" });
-//     }
-//     return next({
-//       ctx: {
-//         // infers the `session` as non-nullable
-//         session: { ...ctx.session, user: ctx.session.user },
-//       },
-//     });
-//   });
-export const protectedProcedure = t.procedure.use(isAuthanticated);
-
-// export  protectedProcedure= t.procedure.use(isAuthanticated)
+export const protectedProcedure = t.procedure
+  .use(timingMiddleware)
+  .use(({ ctx, next }) => {
+    if (!ctx.session || !ctx.session.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+    return next({
+      ctx: {
+        // infers the `session` as non-nullable
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  
+  });

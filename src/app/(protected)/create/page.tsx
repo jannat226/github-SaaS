@@ -16,52 +16,25 @@ type FormInput = {
 }
 const CreatePage = (data:FormInput) => { 
     const {register,reset, handleSubmit} =  useForm<FormInput>()
-    // const createProject = api.project.createProject.useMutation()
-    // function onSubmit(data: FormInput){
-    //     window.alert(JSON.stringify(data,null,2))
-    //     createProject.mutate({
-    //             githubUrl: data.repoUrl,
-    //         name: data.projectName,
-    //         githubToken: data.githubToken
-    //     },{
-    //         onSuccess:()=>{
-    //             toast.success('Project created successfully')
-    //             reset()
-    //         },
-    //         onError:(error)=>{
-    //             toast.error('Error creating project')    
-    //         }})
-                
-    //     return true
-    //  }
-    const createProject = api.project.createProject.useMutation();
-
-async function onSubmit(data: FormInput) {
-    try {
-        // If you still want to debug the data:
-        console.log(data); // Better alternative to window.alert
-
-        // Perform the mutation
-        await createProject.mutateAsync({
+    api.post
+    const createProject = api.project.createProject.useMutation()
+    function onSubmit(data: FormInput){
+        window.alert(JSON.stringify(data,null,2))
+        createProject.mutate({
             githubUrl: data.repoUrl,
             name: data.projectName,
-            githubToken: data.githubToken,
-        });
-
-        // On success
-        toast.success('Project created successfully');
-        reset();
-    } catch (error) {
-        // Log the error to the console
-        console.error('Error creating project:', error);
-        toast.error('Error creating project');
-    }
-}
-     
-        
-    
-    
-    
+            githubToken: data.githubToken
+        },{
+            onSuccess:()=>{
+                toast.success('Project created successfully')
+                reset()
+            },
+            onError:(error: any)=>{
+                toast.error('Error creating project')    
+            }})
+                
+        return true
+     }    
   return (
     <div className='flex justify-center items-center h-full gap-2'>
         <img src="/undraw_github.svg" alt="github" className='w-20'/>      
@@ -73,6 +46,8 @@ async function onSubmit(data: FormInput) {
             <div className='h-2'>
                 <form onSubmit={handleSubmit(onSubmit)}>
                 {/* <Input  {...register('name',{required:true})}placeholder='enter Name' required/>  */}
+                <div className="h2"></div>
+                    <Input  {...register('projectName',{required:true})}placeholder='Project Name' required/>         
                 <div className="h2"></div>
                     <Input  {...register('repoUrl',{required:true})}placeholder='Github url' required/>           
               <div className="h2"></div>
