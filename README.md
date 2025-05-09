@@ -1,4 +1,4 @@
-**ProjectName** is a modern, scalable SaaS application designed to [solve a specific problem or provide a key service]. Built with [Tech Stack], it’s fast, user-friendly, and ready for deployment.
+**GithubSass** is a modern, scalable SaaS application designed to [solve a specific problem or provide a key service]. Built with [Tech Stack], it’s fast, user-friendly, and ready for deployment.
 
 > “A good SaaS does three things: it scales, it serves, and it doesn’t crash at 2AM.”
 
